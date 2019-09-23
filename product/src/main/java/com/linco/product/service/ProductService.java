@@ -1,5 +1,6 @@
 package com.linco.product.service;
 
+import com.linco.product.dto.CartDTO;
 import com.linco.product.dataobject.ProductInfo;
 
 import java.util.List;
@@ -18,4 +19,12 @@ public interface ProductService {
      */
     List<ProductInfo> findUpAll();
 
+    /**
+     * 查询商品列表
+     * @param productIdList
+     * @return
+     */
+    List<ProductInfo> findList(List<String> productIdList);
+
+    void decreaseStock(List<CartDTO> cartDTOList);
 }

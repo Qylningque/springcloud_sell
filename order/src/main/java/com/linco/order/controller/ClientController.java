@@ -1,14 +1,20 @@
 package com.linco.order.controller;
 
 import com.linco.order.client.ProductClient;
+import com.linco.order.dataobject.ProductInfo;
+import com.linco.order.dto.CartDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @Classname: ClientController
@@ -83,5 +89,17 @@ public class ClientController {
         String response = productClient.productMsg();
         log.info("response={}",response);
         return response;
+    }
+
+    @GetMapping("/getProductList")
+    public String getProductList(){
+        List<ProductInfo> result = productClient.listForOrder(Arrays.asList("157875227953464068"));
+        log.info("result={}",result);
+        return "ok";
+    }
+
+    @GetMapping("/productDecreaseStock")
+    public void decreaseStock(){
+        productClient.decreaseStock(Arrays.asList(new CartDTO("157875227953464068",10)));
     }
 }

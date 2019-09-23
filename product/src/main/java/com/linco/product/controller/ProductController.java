@@ -1,5 +1,6 @@
 package com.linco.product.controller;
 
+import com.linco.product.dto.CartDTO;
 import com.linco.product.dataobject.ProductCategory;
 import com.linco.product.dataobject.ProductInfo;
 import com.linco.product.service.ProductCategoryService;
@@ -10,9 +11,7 @@ import com.linco.product.vo.ProductVO;
 import com.linco.product.vo.ResultVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,4 +71,18 @@ public class ProductController {
         return ResultVOUtil.success(productVOList);
     }
 
+    /**
+     * 获取商品列表（供外部服务调用）
+     * @param productIdList
+     * @return
+     */
+    @PostMapping("/listForOrder")
+    public List<ProductInfo> listForOrder(@RequestBody List<String> productIdList){
+        return productService.findList(productIdList);
+    }
+
+    @PostMapping("/decreaseStock")
+    public void decreaseStock(@RequestBody List<CartDTO> cartDTOList){
+        productService.decreaseStock(cartDTOList);
+    }
 }

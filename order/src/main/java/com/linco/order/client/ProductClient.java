@@ -1,7 +1,13 @@
 package com.linco.order.client;
 
+import com.linco.order.dataobject.ProductInfo;
+import com.linco.order.dto.CartDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 /**
  * @Classname: ProductClient
@@ -16,4 +22,9 @@ public interface ProductClient {
     @GetMapping("/productServer/getMsg")
     String productMsg();
 
+    @PostMapping("/product/listForOrder")
+    List<ProductInfo> listForOrder(@RequestBody List<String> productIdList);
+
+    @PostMapping("/product/decreaseStock")
+    void decreaseStock(@RequestBody List<CartDTO> cartDTOList);
 }
