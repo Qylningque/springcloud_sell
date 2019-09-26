@@ -3,8 +3,6 @@ package com.linco.order.service.impl;
 import com.linco.product.client.ProductClient;
 import com.linco.order.dataobject.OrderDetail;
 import com.linco.order.dataobject.OrderMaster;
-import com.linco.order.dataobject.ProductInfo;
-import com.linco.order.dto.CartDTO;
 import com.linco.order.dto.OrderDTO;
 import com.linco.order.enums.OrderStatusEnums;
 import com.linco.order.enums.PayStatusEnums;

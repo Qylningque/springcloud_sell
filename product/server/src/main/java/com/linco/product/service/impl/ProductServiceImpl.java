@@ -1,12 +1,17 @@
 package com.linco.product.service.impl;
 
 import com.linco.product.common.DecreaseStockInput;
+import com.linco.product.common.ProductInfoOutput;
 import com.linco.product.dataobject.ProductInfo;
 import com.linco.product.enums.ProductStatusEnum;
 import com.linco.product.enums.ResultEnum;
 import com.linco.product.exception.ProductException;
 import com.linco.product.repository.ProductInfoRepository;
 import com.linco.product.service.ProductService;
+import com.linco.product.utils.JsonUtil;
+import com.rabbitmq.tools.json.JSONUtil;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductInfoRepository productInfoRepository;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Override
     public List<ProductInfo> findUpAll() {
@@ -56,6 +64,11 @@ public class ProductServiceImpl implements ProductService {
             //3.将库存信息更新到商品信息中
             productInfo.setProductStock(number);
             productInfoRepository.save(productInfo);
+
+            //发送MQ消息
+            ProductInfoOutput output = new ProductInfoOutput();
+            BeanUtils.copyProperties(productInfo,output);
+            amqpTemplate.convertAndSend("productInfo", JsonUtil.toJson(output));
         }
     }
 }
