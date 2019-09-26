@@ -7,6 +7,16 @@ spring:
         enabled: true
         service-id: CONFIG
       profile: test
+#      Stream消息分组，解决多服务器部署同一服务时同时收到消息
+    stream:
+      binders:
+        streamInput:
+          group: order
+          content-type: application/json
+        streamOutput:
+          group: order
+#          传递对象配置
+          content-type: application/json
   rabbitmq:
     host: localhost
     port: 5672
