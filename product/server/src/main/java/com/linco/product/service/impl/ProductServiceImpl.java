@@ -10,14 +10,17 @@ import com.linco.product.repository.ProductInfoRepository;
 import com.linco.product.service.ProductService;
 import com.linco.product.utils.JsonUtil;
 import com.rabbitmq.tools.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @Classname: ProductServiceImpl
@@ -27,6 +30,7 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -46,8 +50,23 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public void decreaseStock(List<DecreaseStockInput> decreaseStockInputList) {
+        // 1.减库存
+        List<ProductInfo> productInfoList = decreaseStockProcess(decreaseStockInputList);
+        // 2.转换对象
+        List<ProductInfoOutput> productInfoOutputList = productInfoList.stream().map(e -> {
+            ProductInfoOutput productInfoOutput = new ProductInfoOutput();
+            BeanUtils.copyProperties(e,productInfoOutput);
+            log.info("转换后的对象:{}",productInfoOutput);
+            return productInfoOutput;
+        }).collect(Collectors.toList());
+        // 3.发送MQ消息到其它服务
+        amqpTemplate.convertAndSend("productInfo",JsonUtil.toJson(productInfoOutputList));
+    }
+
+    @Transactional
+    public List<ProductInfo> decreaseStockProcess(List<DecreaseStockInput> decreaseStockInputList) {
+        List<ProductInfo> productInfoList = new ArrayList<>();
         for (DecreaseStockInput decreaseStockInput:decreaseStockInputList){
             Optional<ProductInfo> productOptional = productInfoRepository.findById(decreaseStockInput.getProductId());
             //1.判断商品是否存在
@@ -64,11 +83,8 @@ public class ProductServiceImpl implements ProductService {
             //3.将库存信息更新到商品信息中
             productInfo.setProductStock(number);
             productInfoRepository.save(productInfo);
-
-            //发送MQ消息
-            ProductInfoOutput output = new ProductInfoOutput();
-            BeanUtils.copyProperties(productInfo,output);
-            amqpTemplate.convertAndSend("productInfo", JsonUtil.toJson(output));
+            productInfoList.add(productInfo);
         }
+        return productInfoList;
     }
 }
