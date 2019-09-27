@@ -14,7 +14,7 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 
 /**
  * @Classname: AuthFilter
- * @description: 权限校验
+ * @description: 权限校验（区分买家和卖家）
  * @Author: Create by qingyulin(寧缺) qylningque@outlook.com
  * @Date: 2019-09-27 11:29
  * @Version 1.0
