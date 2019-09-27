@@ -3,6 +3,7 @@ package com.linco.apigateway.filter;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,7 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
  * @Date: 2019-09-27 11:39
  * @Version 1.0
  */
+@Component
 public class AddResponseHeaderFilter extends ZuulFilter {
     @Override
     public String filterType() {
