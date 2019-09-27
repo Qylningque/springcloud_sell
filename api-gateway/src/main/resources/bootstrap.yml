@@ -17,11 +17,14 @@ eureka:
 zuul:
   routes:
 #    简洁写法
-    product: /myProduct/**
+#    product: /myProduct/**
 #   一般写法
-#    myProduct:
-#      path: /myProduct/**
-#      serviceId: product
+    myProduct:
+      path: /myProduct/**
+      serviceId: product
+#      敏感头的过滤（不过滤设为空：Cookie\Set-Cookie\Authorization）
+      sensitiveHeaders:
 #    通过路由屏蔽外部访问某些接口(排除某些路由)
-  ignored-patterns:
-    - /**/product/list
+#  ignored-patterns:
+#    - /**/product/list
+#动态路由，结合SpringCloudBus+SpringCloudConfig+一个配置类（如ZuulConfig）
