@@ -22,3 +22,6 @@ zuul:
 #    myProduct:
 #      path: /myProduct/**
 #      serviceId: product
+#    通过路由屏蔽外部访问某些接口(排除某些路由)
+  ignored-patterns:
+    - /**/product/list
