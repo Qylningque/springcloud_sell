@@ -23,8 +23,10 @@ zuul:
       path: /myProduct/**
       serviceId: product
 #      敏感头的过滤（不过滤设为空：Cookie\Set-Cookie\Authorization）
-      sensitiveHeaders:
+#      sensitiveHeaders:
 #    通过路由屏蔽外部访问某些接口(排除某些路由)
 #  ignored-patterns:
 #    - /**/product/list
 #动态路由，结合SpringCloudBus+SpringCloudConfig+一个配置类（如ZuulConfig）
+#      全局（全部敏感头）敏感头的过滤（不过滤设为空：Cookie\Set-Cookie\Authorization）
+  sensitive-headers:
