@@ -25,3 +25,7 @@ spring:
   redis:
     host: localhost
     port: 6379
+#配置feign和hystrix
+feign:
+  hystrix:
+    enabled: true
