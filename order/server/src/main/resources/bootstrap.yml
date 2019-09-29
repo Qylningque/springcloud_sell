@@ -29,3 +29,7 @@ spring:
 feign:
   hystrix:
     enabled: true
+#    修改日志级别
+logging:
+  level:
+    org.springframework.cloud.openfeign: debug
